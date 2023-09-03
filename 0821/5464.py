@@ -7,47 +7,44 @@ park_list = deque([int(input().strip()) for _ in range(N)])
 car_list = deque([int(input().strip()) for _ in range(M)])
 sequence_list = deque([int(input().strip()) for _ in range(M * 2)])
 
-# 주차장의 번호 리스트
-park_idx = deque(range(N))
+# 주차장과 주차장에 주차하는 차 번호와 주차장 딕셔너리
+park_idx = list(range(N))
+parking = dict()
+# 대기 중인 차량이 있는 큐
+queue = deque()
 # 수입
 income = 0
-# 차량들의 출입 순서의 인덱스를 나타내는
-i = 0
-# 차량 대기 장소
-queue = deque()
-# 주차 공간의 인덱스와 차량 번호를 묶을 딕셔너리
-car_num = {}
-# 차들이 주차장에 들어오는 횟수
-cnt = 0
-# 차들이 모두 들어올 때까지 while문을 반복
-while cnt < M:
-    # 출입 순서가 음수면 차량이 나간다.
-    if sequence_list[i] < 0:
-        # park_list에 다시 차량이 나간 자리의 요금 추가
-        park_idx.append(car_num[car_list[-sequence_list[i] - 1]])
-        park_idx = sorted(park_idx)
-        park_idx = deque(park_idx)
-        car_num.pop(car_list[-sequence_list[i] - 1])
-        # 차량 대기 장소에 차량이 있으면
-        if queue:
-            # 차량 대기 장소에 있는 차량을 그대로 가지고 온다.
-            c = queue.popleft()
-            p = park_idx.popleft()
-            car_num[c] = p
-            cnt += 1
-            income += c * park_list[p]
-        i += 1
-    # 출입 순서가 양수면 차량이 들어온다.
-    elif sequence_list[i] > 0:
-        # 차량이 가득 찼으면 i 추가 queue에 차량 추가
-        if len(car_num) == N:
-            queue.append(car_list[sequence_list[i] - 1])
-            i += 1
-        # 차량이 가득 차지 않았으면 주차장에 차량 추가
+
+# 주차장 출입 순서를 돌리면서 차량 주차
+for sequence in sequence_list:
+    if sequence > 0:
+        # 차가 꽉 찼으면 큐로 보낸다.
+        if len(parking) == N:
+            queue.append(sequence)
+        # 공간이 남아 있으면 주차장의 번호 리스트와 주차하는 차 번호를 딕셔너리에
         else:
-            p = park_idx.popleft()
-            car_num[car_list[sequence_list[i] - 1]] = p
-            cnt += 1
-            income += car_list[sequence_list[i] - 1] * park_list[p]
-            i += 1
+            # 주차 공간을 없애고
+            p = park_idx.pop(0)
+            # 주차된 공간 딕셔너리에 추가
+            parking[sequence] = p
+            # 수입은 차의 무게와 주차 공간의 단위 무게당 요금의 곱
+            income += car_list[sequence - 1] * park_list[p]
+    # 순서가 음수로 나오면
+    else:
+        # 주차장에 다시 공간을 추가하고
+        park_idx.append(parking[-sequence])
+        # 주차 순서대로 다시 정렬
+        park_idx.sort()
+        # 딕셔너리에서 순서를 pop
+        parking.pop(-sequence)
+        # 대기중인 차량이 있으면
+        if queue:
+            # 위에와 마찬가지로 대기중의 차량 가장 앞을 없애고
+            sequence = queue.popleft()
+            # 주차 공간을 없애고
+            p = park_idx.pop(0)
+            # 딕셔너리에 추가 후
+            parking[sequence] = p
+            # 수입 계산
+            income += car_list[sequence - 1] * park_list[p]
 print(income)
