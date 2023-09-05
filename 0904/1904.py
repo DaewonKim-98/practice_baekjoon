@@ -9,12 +9,12 @@ def tile(N):
     arr[2] = 2
     if N > 2:
         for i in range(3, N + 1):
-            arr[i] = arr[i - 2] + arr[i - 1]
+            arr[i] = (arr[i - 2] + arr[i - 1]) % 15746
     return arr[N]
 
 N = int(input().strip())
-arr = [0] * 1000001
-result = tile(N) % 15746
+arr = [0] * (1000001)
+result = tile(N)
 print(result)
 
 
