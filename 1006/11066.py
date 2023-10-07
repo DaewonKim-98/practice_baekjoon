@@ -6,21 +6,21 @@ for case in range(1, T + 1):
 
     # 인접한 것들을 계속 더하면서 최솟값 찾기
     # 2차원 배열
-    dp = [[0] * K for _ in range(K)]
+    dp = [[0] * (K + 1) for _ in range(K + 1)]
     # 처음 dp는 각 수들의 합
-    for i in range(K - 1):
-        dp[1][i] = arr[i] + arr[i + 1]
-
-    # K = 3일 때까지 dp는 이전 dp와 arr에 따라서
-    for i in range(0, K - 2):
-        dp[2][i] = min(dp[1][i] + arr[i + 2] + dp[1][i], dp[1][i + 1] + arr[i] + dp[1][i + 1])
+    for i in range(1, K):
+        dp[i][i + 1] = arr[i - 1] + arr[i]
 
 
-    # 이후에는 자신 아래아래의 dp까지 고려해서
-    for i in range(3, K):
-        for j in range(0, K - i):
-            dp[i][j] = min(dp[i - 1][j] + arr[j + 3] + dp[i - 1][j], 
-                               dp[i - 1][j + 1] + arr[j] + dp[i - 1][j + 1], 
-                               dp[i - 2][j] * 2 + dp[i - 2][j + 2] * 2)
+    # 1, 4는 1, 1 + 2, 4 / 1, 2 + 3, 4 / 1, 3 + 4, 4로 이루어져있으므로
+    # 이후도 똑같을 것?????일걸??맞나제발
+    # 밑에서부터 i가 올라와야지 1부터의 합을 구할 수 있으니까
+    for i in range(K - 1, 0, -1):
+        for j in range(1, K + 1):
+            if dp[i][j] == 0 and i < j:
+                dp[i][j] = min(dp[i][k] + dp[k + 1][j] for k in range(i, j))
+                # 마지막에는 전체 합 더해주기
+                dp[i][j] += sum(arr[i - 1:j])
+                
 
     print(dp)
