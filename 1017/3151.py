@@ -10,7 +10,7 @@ cnt = 0
 # j의 값에 따라서 딕셔너리 같은 것이 있을 때와 없을 때 따로 나눠서
 j_dic_same = {}
 j_dic_dif = {}
-for i in range(arr):
+for i in arr:
     j_dic_same[i] = 0
     j_dic_dif[i] = 0
 for j in range(N - 1, 1, -1):
@@ -29,12 +29,18 @@ for j in range(N - 1, 1, -1):
             # 0이 된다면
             if arr[i] + arr[middle] + arr[j] == 0:
                 if arr[middle] == arr[j]:
-                    j_dic_same[middle] =
+                    j_dic_same[middle] += 1
+                else:
+                    j_dic_dif[middle] += 1
                 cnt += 1
                 # 똑같은 수가 있을 수 있으므로
                 x = 1
                 while middle + x < j:
                     if arr[i] + arr[middle + x] + arr[j] == 0:
+                        if arr[middle] == arr[j]:
+                            j_dic_same[middle] += 1
+                        else:
+                            j_dic_dif[middle] += 1
                         cnt += 1
                         x += 1
                     else:
@@ -43,6 +49,10 @@ for j in range(N - 1, 1, -1):
                 y = 1
                 while middle - y > i:
                     if arr[i] + arr[middle - y] + arr[j] == 0:
+                        if arr[middle] == arr[j]:
+                            j_dic_same[middle] += 1
+                        else:
+                            j_dic_dif[middle] += 1
                         cnt += 1
                         y += 1
                     else:
