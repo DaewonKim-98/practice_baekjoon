@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 아진짜 개뻘짓 dp였네 어쩐지 절대 안되더라 ㅁ니아러ㅗ미낭룸낭러ㅜㅁㄴ어ㅏㄻ
 N, M = map(int, input().split())
 K = int(input())
@@ -36,3 +37,7 @@ for i in range(1, M + 1):
         
 print(dp[M][N])
         
+=======
+N, M = map(int, input().split())
+K = int(input())
+>>>>>>> acda1e901b7adfec85929c2d085915debcc26fb8
